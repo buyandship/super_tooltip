@@ -33,7 +33,7 @@ class TooltipPositionDelegate extends SingleChildLayoutDelegate {
   final double? top, bottom, left, right;
 
   @override
-  BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
+  BoxConstraints getConstraintsForChild(BoxConstraints _constraints) {
     // TD: when margin is EdgeInsets, look into
     // constraints.deflate(margin);
 
