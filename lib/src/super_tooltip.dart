@@ -399,8 +399,7 @@ class SuperTooltip extends StatefulWidget {
     this.showOnTap = true,
     this.boxShadows,
     this.clickThrough = false,
-  })  : assert(showDropBoxFilter ? showBarrier ?? false : true,
-            'showDropBoxFilter or showBarrier can\'t be false | null'),
+  })  : assert(showDropBoxFilter ? showBarrier ?? false : true, 'showDropBoxFilter or showBarrier can\'t be false | null'),
         super(key: key);
 
   /// Key used to identify the inside close button.
@@ -419,8 +418,7 @@ class SuperTooltip extends StatefulWidget {
   State createState() => _SuperTooltipState();
 }
 
-class _SuperTooltipState extends State<SuperTooltip>
-    with SingleTickerProviderStateMixin {
+class _SuperTooltipState extends State<SuperTooltip> with SingleTickerProviderStateMixin {
   final LayerLink _layerLink = LayerLink();
   late AnimationController _animationController;
   SuperTooltipController? _superTooltipController;
@@ -558,12 +556,10 @@ class _SuperTooltipState extends State<SuperTooltip>
       -target.dx + size.width / 2,
       -target.dy + size.height / 2,
     );
-    final backgroundColor =
-        widget.backgroundColor ?? Theme.of(context).cardColor;
+    final backgroundColor = widget.backgroundColor ?? Theme.of(context).cardColor;
 
     var constraints = widget.constraints;
-    var preferredDirection =
-        widget.popupDirectionBuilder?.call() ?? widget.popupDirection;
+    var preferredDirection = widget.popupDirectionBuilder?.call() ?? widget.popupDirection;
     var left = widget.left;
     var right = widget.right;
     var top = widget.top;
@@ -610,9 +606,11 @@ class _SuperTooltipState extends State<SuperTooltip>
             builder: (context) => FadeTransition(
               opacity: animation,
               child: GestureDetector(
-                onTap: widget.hideTooltipOnBarrierTap
-                    ? _superTooltipController!.hideTooltip
-                    : null,
+                onTapDown: (_) {
+                  if (widget.hideTooltipOnBarrierTap) {
+                    _superTooltipController!.hideTooltip();
+                  }
+                },
                 child: Container(
                   key: SuperTooltip.barrierKey,
                   decoration: ShapeDecoration(
@@ -785,9 +783,7 @@ class _SuperTooltipState extends State<SuperTooltip>
     _createOverlayEntries();
 
     // Start the fade-in animation and wait for it to complete.
-    await _animationController
-        .forward()
-        .whenComplete(_superTooltipController!.complete);
+    await _animationController.forward().whenComplete(_superTooltipController!.complete);
   }
 
   /// Removes the overlay entries for the tooltip, barrier, and blur filter.
@@ -825,9 +821,7 @@ class _SuperTooltipState extends State<SuperTooltip>
     widget.onHide?.call();
 
     // Start the fade-out animation and wait for it to complete.
-    await _animationController
-        .reverse()
-        .whenComplete(_superTooltipController!.complete);
+    await _animationController.reverse().whenComplete(_superTooltipController!.complete);
 
     // Remove the overlay entries for the tooltip, barrier, and blur filter.
     _removeEntries();
@@ -912,9 +906,7 @@ class _SuperTooltipState extends State<SuperTooltip>
       child: Material(
         color: Colors.transparent,
         child: IconButton(
-          key: closeButtonType == CloseButtonType.inside
-              ? SuperTooltip.insideCloseButtonKey
-              : SuperTooltip.outsideCloseButtonKey,
+          key: closeButtonType == CloseButtonType.inside ? SuperTooltip.insideCloseButtonKey : SuperTooltip.outsideCloseButtonKey,
           icon: Icon(
             Icons.close_outlined,
             size: closeButtonSize,
